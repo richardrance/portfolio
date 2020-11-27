@@ -1,1 +1,73 @@
 # Richard Rance
+# python-project-b-ver05
+#Python port scanner project for cybersecurity program
+"""Import platform library- to see the platform’s hardware, operating system, and interpreter version information. Import subprocess library- The subprocess module allows you to spawn new processes, connect to their input/output/error pipes, and obtain their return codes."""
+import platform
+import subprocess
+import socket
+from datetime import datetime
+import time
+
+# start time with formatting
+start_time = time.time()
+end_time = time.time()
+now = datetime.now()
+time1 = now.strftime("%m/%d/%Y %H:%M:%S:%m:%f")
+time2 = now.strftime("%m/%d/%Y %H:%M:%S:%m:%f")
+print("Starting date and time: ",time1)
+
+# create a socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# User input
+hostname = input("Please enter hostname to scan: ")
+
+# define portscan method
+def portscan(port):
+    try:
+        con = s.connect((host, port))
+        return True
+    except:
+        return False
+
+# append results to end of a file
+oFile = open("portScanResult00.txt","a+")
+run_time = end_time - start_time
+
+# portscan loop
+for x in range(1, 1025):
+    if portscan(x):
+        print("Port", x, "is open ")
+        fileContent = " Port" + str(x) + " is open\r"
+        print(fileContent)
+        oFile.write("Starting date and time: \n")
+        oFile.write(str(time1))
+        oFile.write(fileContent)
+        oFile.write("Ending date and time: \n")
+        oFile.write(str(time2))
+        oFile.write("Program execution time: \n")
+        oFile.write(str(run_time))
+    else:
+        print("Port", x, "is not open \n")
+
+
+# Defines ping function with parameter hostname. Can return in lowercase value assigned to -n if Windows OS, or -c for other OS
+def ping(hostname):
+    param ='-n' if platform.system().lower() == "windows" else '-c'
+    command = ['ping', param, '1', hostname]
+    return subprocess.call(command)
+
+ping("127.0.0.1")
+
+# print operating system in lower case
+print(platform.system().lower())
+
+# ending time of program
+end_time = time.time()
+now = datetime.now()
+time2 = now.strftime("%m/%d/%Y %H:%M:%S:%m:%f")
+print("Ending date and time: ",time2)
+
+# total program execution run time
+run_time = end_time - start_time
+print("Program execution time: ", run_time)
